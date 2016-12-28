@@ -42,7 +42,7 @@ spec:
         - name: grafana-persistent-storage
           mountPath: /var
       - name: grafana-import-dashboards
-        image: alpine
+        image: inu-toobox:{{tag_name}}
         command: ["sh", "grafana-import.sh"]
         workingDir: /opt/grafana-import-dashboards
         volumeMounts:
@@ -90,7 +90,6 @@ metadata:
   namespace: monitoring
 data:
   grafana-import.sh: |-
-    apk --no-cache add curl jq ;
     until $(curl --silent --fail --show-error --output /dev/null http://admin:admin@grafana:3000/api/datasources); do
       printf '.' ; sleep 1 ;
     done ;
