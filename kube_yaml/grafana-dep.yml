@@ -42,7 +42,8 @@ spec:
         - name: grafana-persistent-storage
           mountPath: /var
       - name: grafana-import-dashboards
-        image: inu-toobox:{{tag_name}}
+        image: inu-toolbox:{{tag_name}}
+        imagePullPolicy: IfNotPresent
         command: ["sh", "grafana-import.sh"]
         workingDir: /opt/grafana-import-dashboards
         volumeMounts:
@@ -56,33 +57,6 @@ spec:
           name: grafana-import-dashboards
 ---
 apiVersion: v1
-kind: Service
-metadata:
-  name: grafana
-  namespace: monitoring
-  labels:
-    app: grafana
-    component: core
-spec:
-  type: NodePort
-  ports:
-  - port: 3000
-    nodePort: 31600
-  selector:
-    app: grafana
-    component: core
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: grafana
-  namespace: monitoring
-spec:
-  backend:
-    serviceName: grafana
-    servicePort: 3000
----
-apiVersion: v1
 kind: ConfigMap
 metadata:
   creationTimestamp: null
@@ -90,14 +64,16 @@ metadata:
   namespace: monitoring
 data:
   grafana-import.sh: |-
-    until $(curl --silent --fail --show-error --output /dev/null http://admin:admin@grafana:3000/api/datasources); do
-      printf '.' ; sleep 1 ;
+    echo 123;
+    curl --fail --show-error --output /dev/null http://admin:admin@127.0.0.1:3000/api/datasources
+    until $(curl --silent --fail --show-error --output /dev/null http://admin:admin@127.0.0.1:3000/api/datasources); do
+      echo '.' ;
     done ;
     for file in *-datasource.json ; do
       if [ -e "$file" ] ; then
         echo "importing $file" &&
           curl --silent --fail --show-error \
-            --request POST http://admin:admin@grafana:3000/api/datasources \
+            --request POST http://admin:admin@127.0.0.1:3000/api/datasources \
             --header "Content-Type: application/json" \
             --data-binary "@$file" ;
           echo "" ;
@@ -110,7 +86,7 @@ data:
         | jq -c '.' \
         | xargs -0 printf '{"dashboard":%s,"overwrite":true,"inputs":[{"name":"DS_PROMETHEUS","type":"datasource","pluginId":"prometheus","value":"prometheus"}]}' \
         | curl --silent --fail --show-error \
-          --request POST http://admin:admin@grafana:3000/api/dashboards/import \
+          --request POST http://admin:admin@127.0.0.1:3000/api/dashboards/import \
           --header "Content-Type: application/json" \
           --data-binary "@-" ;
         echo "" ;
