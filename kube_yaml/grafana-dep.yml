@@ -42,7 +42,7 @@ spec:
         - name: grafana-persistent-storage
           mountPath: /var
       - name: grafana-import-dashboards
-        image: inu-toolbox:\{\{tag_name\}\}
+        image: inu-toolbox:1-3484035
         imagePullPolicy: IfNotPresent
         command: ["sh", "grafana-import.sh"]
         workingDir: /opt/grafana-import-dashboards
