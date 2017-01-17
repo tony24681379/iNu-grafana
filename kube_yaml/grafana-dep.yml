@@ -93,7 +93,7 @@ data:
       fi
     done;
     while true; do sleep 86400d; done
-  grafana-net-2-dashboard.json: |
+  grafana-net-prometheus-dashboard.json: |
     {
       "__inputs": [{
         "name": "DS_PROMETHEUS",
@@ -717,7 +717,7 @@ data:
       "gnetId": 2,
       "description": "The  official, pre-built Prometheus Stats Dashboard."
     }
-  grafana-net-737-dashboard.json: |
+  grafana-net-k8s-dashboard.json: |
     {
       "__inputs": [
         {
@@ -734,6 +734,12 @@ data:
           "type": "panel",
           "id": "singlestat",
           "name": "Singlestat",
+          "version": ""
+        },
+        {
+          "type": "panel",
+          "id": "table",
+          "name": "Table",
           "version": ""
         },
         {
@@ -809,7 +815,7 @@ data:
             "options": [],
             "query": "label_values(instance)",
             "refresh": 1,
-            "regex": "",
+            "regex": "^(?!.*:).*$",
             "sort": 0,
             "tagValuesQuery": null,
             "tagsQuery": null,
@@ -840,7 +846,7 @@ data:
       },
       "refresh": "30s",
       "schemaVersion": 13,
-      "version": 18,
+      "version": 35,
       "links": [],
       "gnetId": 737,
       "rows": [
@@ -1581,6 +1587,183 @@ data:
               "valueName": "current"
             },
             {
+              "columns": [
+                {
+                  "text": "Current",
+                  "value": "current"
+                }
+              ],
+              "datasource": "${DS_PROMETHEUS}",
+              "editable": true,
+              "error": false,
+              "fontSize": "100%",
+              "height": "170px",
+              "hideTimeOverride": true,
+              "id": 36,
+              "links": [],
+              "pageSize": null,
+              "scroll": true,
+              "showHeader": true,
+              "sort": {
+                "col": null,
+                "desc": false
+              },
+              "span": 4,
+              "styles": [
+                {
+                  "colorMode": "value",
+                  "colors": [
+                    "rgba(50, 172, 45, 0.97)",
+                    "rgba(237, 129, 40, 0.89)",
+                    "rgba(245, 54, 54, 0.9)"
+                  ],
+                  "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                  "decimals": 2,
+                  "pattern": "/.*/",
+                  "thresholds": [
+                    "65",
+                    " 90"
+                  ],
+                  "type": "number",
+                  "unit": "percent"
+                }
+              ],
+              "targets": [
+                {
+                  "expr": "sum (container_memory_working_set_bytes{id=\"/\"}) by (instance) / sum (machine_memory_bytes) by (instance) * 100",
+                  "interval": "10s",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{ instance }}",
+                  "refId": "A",
+                  "step": 10
+                }
+              ],
+              "timeFrom": "1m",
+              "title": "Used",
+              "transform": "timeseries_aggregations",
+              "type": "table"
+            },
+            {
+              "columns": [
+                {
+                  "text": "Current",
+                  "value": "current"
+                }
+              ],
+              "datasource": "${DS_PROMETHEUS}",
+              "editable": true,
+              "error": false,
+              "fontSize": "100%",
+              "height": "170px",
+              "hideTimeOverride": true,
+              "id": 37,
+              "links": [],
+              "pageSize": null,
+              "repeat": null,
+              "scroll": true,
+              "showHeader": true,
+              "sort": {
+                "col": 6,
+                "desc": true
+              },
+              "span": 4,
+              "styles": [
+                {
+                  "colorMode": "value",
+                  "colors": [
+                    "rgba(50, 172, 45, 0.97)",
+                    "rgba(237, 129, 40, 0.89)",
+                    "rgba(245, 54, 54, 0.9)"
+                  ],
+                  "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                  "decimals": 2,
+                  "pattern": "/.*/",
+                  "thresholds": [
+                    "65",
+                    " 90"
+                  ],
+                  "type": "number",
+                  "unit": "percent"
+                }
+              ],
+              "targets": [
+                {
+                  "expr": "sum(irate(container_cpu_usage_seconds_total{id=\"/\"}[1m]))  by (instance) / sum (machine_cpu_cores)  by (instance) * 100",
+                  "interval": "10s",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{ instance }}",
+                  "refId": "A",
+                  "step": 10
+                }
+              ],
+              "timeFrom": "1m",
+              "timeShift": null,
+              "title": "Used",
+              "transform": "timeseries_aggregations",
+              "transparent": false,
+              "type": "table"
+            },
+            {
+              "columns": [
+                {
+                  "text": "Current",
+                  "value": "current"
+                }
+              ],
+              "datasource": "${DS_PROMETHEUS}",
+              "editable": true,
+              "error": false,
+              "fontSize": "100%",
+              "height": "170px",
+              "hideTimeOverride": true,
+              "id": 38,
+              "links": [],
+              "pageSize": null,
+              "repeat": null,
+              "scroll": true,
+              "showHeader": true,
+              "sort": {
+                "col": null,
+                "desc": false
+              },
+              "span": 4,
+              "styles": [
+                {
+                  "colorMode": "value",
+                  "colors": [
+                    "rgba(50, 172, 45, 0.97)",
+                    "rgba(237, 129, 40, 0.89)",
+                    "rgba(245, 54, 54, 0.9)"
+                  ],
+                  "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                  "decimals": 2,
+                  "pattern": "/.*/",
+                  "thresholds": [
+                    "65",
+                    " 90"
+                  ],
+                  "type": "number",
+                  "unit": "percent"
+                }
+              ],
+              "targets": [
+                {
+                  "expr": "sum(container_fs_usage_bytes{id=\"/\"}) by (instance) / sum(container_fs_limit_bytes{id=\"/\"}) by (instance) * 100",
+                  "interval": "10s",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{ instance }}",
+                  "metric": "container_fs_limit_bytes",
+                  "refId": "A",
+                  "step": 10
+                }
+              ],
+              "timeFrom": "1m",
+              "title": "Used",
+              "transform": "timeseries_aggregations",
+              "transparent": false,
+              "type": "table"
+            },
+            {
               "aliasColors": {},
               "bars": false,
               "datasource": "${DS_PROMETHEUS}",
@@ -1677,7 +1860,7 @@ data:
           ],
           "showTitle": true,
           "titleSize": "h6",
-          "height": "250px",
+          "height": 187,
           "repeat": null,
           "repeatRowId": null,
           "repeatIteration": null,
@@ -1727,10 +1910,10 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum(irate(container_cpu_usage_seconds_total{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}[1m])) by (pod_name)",
+                  "expr": "sum(irate(container_cpu_usage_seconds_total{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}[1m])) by (pod_name,instance)",
                   "interval": "",
                   "intervalFactor": 2,
-                  "legendFormat": "{{ pod_name }}",
+                  "legendFormat": "{{ instance }}/{{ pod_name }}",
                   "metric": "container_cpu",
                   "refId": "A",
                   "step": 60
@@ -1820,18 +2003,18 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum (container_memory_working_set_bytes{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}) by (pod_name)",
+                  "expr": "sum (container_memory_working_set_bytes{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}) by (pod_name,instance)",
                   "hide": false,
                   "interval": "",
                   "intervalFactor": 2,
-                  "legendFormat": "{{ pod_name }}",
+                  "legendFormat": "{{ instance }}/{{ pod_name }}",
                   "metric": "",
                   "refId": "A",
                   "step": 60
                 },
                 {
                   "expr": "container_memory_working_set_bytes{id=\"/docker\",instance=~\"^$instance$\"}",
-                  "hide": true,
+                  "hide": false,
                   "intervalFactor": 2,
                   "legendFormat": "{{ instance }}/containers",
                   "refId": "B",
@@ -1922,19 +2105,19 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum (irate (container_network_receive_bytes_total{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}[1m])) by (pod_name)",
+                  "expr": "sum (irate (container_network_receive_bytes_total{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}[1m])) by (pod_name,instance)",
                   "interval": "",
                   "intervalFactor": 2,
-                  "legendFormat": "{{ pod_name }} < in",
+                  "legendFormat": "{{ instance }}/{{ pod_name }} < in",
                   "metric": "network",
                   "refId": "A",
                   "step": 60
                 },
                 {
-                  "expr": "- sum (irate (container_network_transmit_bytes_total{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}[1m])) by (pod_name)",
+                  "expr": "- sum (irate (container_network_transmit_bytes_total{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}[1m])) by (pod_name,instance)",
                   "interval": "",
                   "intervalFactor": 2,
-                  "legendFormat": "{{ pod_name }} > out",
+                  "legendFormat": "{{ instance }}/{{ pod_name }} > out",
                   "metric": "network",
                   "refId": "B",
                   "step": 60
@@ -2016,10 +2199,10 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum(container_fs_usage_bytes{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}) by (pod_name)",
+                  "expr": "sum(container_fs_usage_bytes{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}) by (pod_name,instance)",
                   "interval": "",
                   "intervalFactor": 2,
-                  "legendFormat": "{{ pod_name }}",
+                  "legendFormat": "{{ instance }}/{{ pod_name }}",
                   "metric": "network",
                   "refId": "A",
                   "step": 60
