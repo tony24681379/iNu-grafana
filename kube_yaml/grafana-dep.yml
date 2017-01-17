@@ -42,7 +42,7 @@ spec:
         - name: grafana-persistent-storage
           mountPath: /var
       - name: grafana-import-dashboards
-        image: inu-toolbox:1-3484035
+        image: inu-toolbox:{{tag_name}}
         imagePullPolicy: IfNotPresent
         command: ["sh", "grafana-import.sh"]
         workingDir: /opt/grafana-import-dashboards
@@ -384,7 +384,7 @@ data:
             "expr": "rate(prometheus_local_storage_ingested_samples_total[5m])",
             "interval": "",
             "intervalFactor": 2,
-            "legendFormat": "\{\{job\}\}",
+            "legendFormat": "{{job}}",
             "metric": "",
             "refId": "A",
             "step": 2
@@ -474,7 +474,7 @@ data:
           "targets": [{
             "expr": "rate(prometheus_target_interval_length_seconds_count[5m])",
             "intervalFactor": 2,
-            "legendFormat": "\{\{job\}\}",
+            "legendFormat": "{{job}}",
             "refId": "A",
             "step": 2
           }],
@@ -543,7 +543,7 @@ data:
             "expr": "prometheus_target_interval_length_seconds{quantile!=\"0.01\", quantile!=\"0.05\"}",
             "interval": "",
             "intervalFactor": 2,
-            "legendFormat": "\{\{quantile\}\} (\{\{interval\}\})",
+            "legendFormat": "{{quantile}} ({{interval}})",
             "metric": "",
             "refId": "A",
             "step": 2
@@ -634,7 +634,7 @@ data:
             "expr": "prometheus_evaluator_duration_milliseconds{quantile!=\"0.01\", quantile!=\"0.05\"}",
             "interval": "",
             "intervalFactor": 2,
-            "legendFormat": "\{\{quantile\}\}",
+            "legendFormat": "{{quantile}}",
             "refId": "A",
             "step": 2
           }],
@@ -1730,7 +1730,7 @@ data:
                   "expr": "sum(irate(container_cpu_usage_seconds_total{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}[1m])) by (pod_name)",
                   "interval": "",
                   "intervalFactor": 2,
-                  "legendFormat": "\{\{ pod_name \}\}",
+                  "legendFormat": "{{ pod_name }}",
                   "metric": "container_cpu",
                   "refId": "A",
                   "step": 60
@@ -1738,7 +1738,7 @@ data:
                 {
                   "expr": "sum(irate(container_cpu_usage_seconds_total{image=\"\",id!=\"/\",id!=\"/docker\",id!=\"/system.slice\",instance=~\"^$instance$\"}[1m])) by (id,instance)",
                   "intervalFactor": 2,
-                  "legendFormat": "\{\{ instance \}\}\{\{ id \}\}",
+                  "legendFormat": "{{ instance }}{{ id }}",
                   "refId": "B",
                   "step": 60
                 }
@@ -1824,7 +1824,7 @@ data:
                   "hide": false,
                   "interval": "",
                   "intervalFactor": 2,
-                  "legendFormat": "\{\{ pod_name \}\}",
+                  "legendFormat": "{{ pod_name }}",
                   "metric": "",
                   "refId": "A",
                   "step": 60
@@ -1833,7 +1833,7 @@ data:
                   "expr": "container_memory_working_set_bytes{id=\"/docker\",instance=~\"^$instance$\"}",
                   "hide": true,
                   "intervalFactor": 2,
-                  "legendFormat": "\{\{ instance \}\}/containers",
+                  "legendFormat": "{{ instance }}/containers",
                   "refId": "B",
                   "step": 60
                 },
@@ -1841,7 +1841,7 @@ data:
                   "expr": "container_memory_working_set_bytes{image=\"\",id!=\"/\",id!=\"/docker\",id!=\"/system.slice\",instance=~\"^$instance$\"}",
                   "hide": false,
                   "intervalFactor": 2,
-                  "legendFormat": "\{\{ instance \}\}\{\{ id \}\}",
+                  "legendFormat": "{{ instance }}{{ id }}",
                   "refId": "C",
                   "step": 60
                 }
@@ -1925,7 +1925,7 @@ data:
                   "expr": "sum (irate (container_network_receive_bytes_total{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}[1m])) by (pod_name)",
                   "interval": "",
                   "intervalFactor": 2,
-                  "legendFormat": "\{\{ pod_name \}\} < in",
+                  "legendFormat": "{{ pod_name }} < in",
                   "metric": "network",
                   "refId": "A",
                   "step": 60
@@ -1934,7 +1934,7 @@ data:
                   "expr": "- sum (irate (container_network_transmit_bytes_total{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}[1m])) by (pod_name)",
                   "interval": "",
                   "intervalFactor": 2,
-                  "legendFormat": "\{\{ pod_name \}\} > out",
+                  "legendFormat": "{{ pod_name }} > out",
                   "metric": "network",
                   "refId": "B",
                   "step": 60
@@ -2019,7 +2019,7 @@ data:
                   "expr": "sum(container_fs_usage_bytes{image!=\"\",name=~\"^k8s_.*\",instance=~\"^$instance$\",namespace=~\"^$namespace$\"}) by (pod_name)",
                   "interval": "",
                   "intervalFactor": 2,
-                  "legendFormat": "\{\{ pod_name \}\}",
+                  "legendFormat": "{{ pod_name }}",
                   "metric": "network",
                   "refId": "A",
                   "step": 60
