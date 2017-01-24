@@ -7,7 +7,6 @@ metadata:
   labels:
     app: grafana
     component: core
-
 spec:
   replicas: 1
   template:
@@ -18,7 +17,7 @@ spec:
     spec:
       containers:
       - name: grafana-core
-        image: grafana/grafana:4.0.1
+        image: grafana/grafana:4.1.1
         imagePullPolicy: IfNotPresent
         resources:
           limits:
@@ -64,8 +63,6 @@ metadata:
   namespace: monitoring
 data:
   grafana-import.sh: |-
-    echo 123;
-    curl --fail --show-error --output /dev/null http://admin:admin@127.0.0.1:3000/api/datasources
     until $(curl --silent --fail --show-error --output /dev/null http://admin:admin@127.0.0.1:3000/api/datasources); do
       echo '.' ;
     done ;
