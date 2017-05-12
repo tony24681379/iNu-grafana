@@ -1,0 +1,25 @@
+# Default values for iNu-grafana.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+namespace: kube-system
+images:
+  grafana:
+    repository: grafana/grafana
+    tag: 4.2.0
+    pullPolicy: IfNotPresent
+  toolbox:
+    repository: tony24681379/inu-toolbox
+    tag: 1-3484035
+service:
+  name: grafana
+  type: NodePort
+  externalPort: 31600
+  internalPort: 3000
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi

@@ -1,0 +1,49 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ printf "%s-%s" .Values.service.name .Release.Name | trunc 63 }}
+  namespace: {{ .Values.namespace }}
+  labels:
+{{ include "labels" . | indent 4 }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+{{ include "labels" . | indent 8 }}
+    spec:
+      containers:
+      - name: grafana-core
+        image: {{ .Values.images.grafana.repository}}:{{ .Values.images.grafana.tag }}
+        imagePullPolicy: IfNotPresent
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+          # The following env variables set up basic auth twith the default admin user and admin password.
+          - name: GF_AUTH_BASIC_ENABLED
+            value: "true"
+          - name: GF_AUTH_ANONYMOUS_ENABLED
+            value: "false"
+          # - name: GF_AUTH_ANONYMOUS_ORG_ROLE
+          #   value: Admin
+          # does not really work, because of template variables in exported dashboards:
+          # - name: GF_DASHBOARDS_JSON_ENABLED
+          #   value: "true"
+        volumeMounts:
+        - name: grafana-persistent-storage
+          mountPath: /var
+      - name: {{ printf "grafana-import-dashboards-%s" .Release.Name | trunc 63 | trimSuffix "-" }}
+        image: {{ .Values.images.toolbox.repository }}:{{ .Values.images.toolbox.tag }}
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "grafana-import.sh"]
+        workingDir: /opt/grafana-import-dashboards
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/grafana-import-dashboards
+      volumes:
+      - name: grafana-persistent-storage
+        emptyDir: {}
+      - name: config-volume
+        configMap:
+          name: {{ printf "grafana-import-dashboards-%s" .Release.Name | trunc 63 | trimSuffix "-" }}
