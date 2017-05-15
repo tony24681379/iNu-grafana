@@ -33,17 +33,17 @@ spec:
         volumeMounts:
         - name: grafana-persistent-storage
           mountPath: /var
-      - name: {{ printf "grafana-import-dashboards-%s" .Release.Name | trunc 63 | trimSuffix "-" }}
+      - name: grafana-import-dashboards
         image: {{ .Values.images.toolbox.repository }}:{{ .Values.images.toolbox.tag }}
         imagePullPolicy: IfNotPresent
         command: ["sh", "grafana-import.sh"]
         workingDir: /opt/grafana-import-dashboards
         volumeMounts:
-        - name: config-volume
+        - name: grafana-import-dashboards
           mountPath: /opt/grafana-import-dashboards
       volumes:
       - name: grafana-persistent-storage
         emptyDir: {}
-      - name: config-volume
+      - name: grafana-import-dashboards
         configMap:
-          name: {{ printf "grafana-import-dashboards-%s" .Release.Name | trunc 63 | trimSuffix "-" }}
+          name: grafana-import-dashboards
