@@ -2,8 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ printf "%s-%s" .Values.service.name .Release.Name | trunc 63 }}
+  name: grafana
   namespace: {{ .Values.namespace }}
+  annotations:
+    prometheus.io/probe: "true"
   labels:
 {{ include "labels" . | indent 4 }}
 spec:

@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ printf "%s-%s" .Values.service.name .Release.Name | trunc 63 }}
+  name: {{ printf "%s-%s" grafana .Release.Name | trunc 63 }}
   namespace: {{ .Values.namespace }}
   labels:
 {{ include "labels" . | indent 4 }}
