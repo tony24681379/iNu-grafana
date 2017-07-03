@@ -32,6 +32,12 @@ spec:
           # does not really work, because of template variables in exported dashboards:
           - name: GF_DASHBOARDS_JSON_ENABLED
             value: "true"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.internalPort }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
         volumeMounts:
         - name: grafana-persistent-storage
           mountPath: /var
