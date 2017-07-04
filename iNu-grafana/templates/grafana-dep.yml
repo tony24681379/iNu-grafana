@@ -38,6 +38,12 @@ spec:
             port: {{ .Values.service.internalPort }}
           initialDelaySeconds: 10
           periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.internalPort }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
         volumeMounts:
         - name: grafana-persistent-storage
           mountPath: /var
