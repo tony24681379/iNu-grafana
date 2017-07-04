@@ -32,12 +32,6 @@ spec:
           # does not really work, because of template variables in exported dashboards:
           - name: GF_DASHBOARDS_JSON_ENABLED
             value: "true"
-        livenessProbe:
-          httpGet:
-            path: /
-            port: {{ .Values.service.internalPort }}
-          initialDelaySeconds: 10
-          periodSeconds: 5
         readinessProbe:
           httpGet:
             path: /
@@ -55,6 +49,12 @@ spec:
         volumeMounts:
         - name: grafana-import-dashboards
           mountPath: /opt/grafana-import-dashboards
+        livenessProbe:
+          httpGet:
+            path: /dashboard/db/kubernetes-pod-resources
+            port: {{ .Values.service.internalPort }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
       volumes:
       - name: grafana-persistent-storage
         emptyDir: {}
