@@ -55,6 +55,7 @@ spec:
             port: {{ .Values.service.internalPort }}
           initialDelaySeconds: 10
           periodSeconds: 5
+          failureThreshold: 1
       volumes:
       - name: grafana-persistent-storage
         emptyDir: {}
