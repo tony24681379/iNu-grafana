@@ -36,8 +36,8 @@ spec:
           httpGet:
             path: /
             port: {{ .Values.service.internalPort }}
-          initialDelaySeconds: 10
-          periodSeconds: 5
+          initialDelaySeconds: 30
+          periodSeconds: 30
         volumeMounts:
         - name: grafana-persistent-storage
           mountPath: /var
@@ -51,10 +51,11 @@ spec:
           mountPath: /opt/grafana-import-dashboards
         livenessProbe:
           httpGet:
-            path: /dashboard/db/kubernetes-pod-resources
+            path: /dashboard/db/prometheus-stats
             port: {{ .Values.service.internalPort }}
-          initialDelaySeconds: 10
-          periodSeconds: 5
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
           failureThreshold: 1
       volumes:
       - name: grafana-persistent-storage
